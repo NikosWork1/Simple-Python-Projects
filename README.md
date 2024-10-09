@@ -1,2 +1,2 @@
 # Simple-Python-Projects
-This is a rock, paper, scissors game in its very simple form, written on Python.
+This is my first repostitory where I will upload simple Python projects.
