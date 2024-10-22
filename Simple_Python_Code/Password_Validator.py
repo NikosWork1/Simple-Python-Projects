@@ -1,7 +1,6 @@
-import re  # Regular expressions module for pattern matching
+import re 
 
 def validate_password(password):
-    # Check if the password meets all criteria
     if (len(password) >= 8 and                       # At least 8 characters long
         re.search(r"[a-z]", password) and            # Contains at least one lowercase letter
         re.search(r"[A-Z]", password) and            # Contains at least one uppercase letter
@@ -11,7 +10,6 @@ def validate_password(password):
     else:
         return False  # Password is invalid
 
-# Main program
 password_input = input("Enter a password to validate: ")
 
 if validate_password(password_input):
