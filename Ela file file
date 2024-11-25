@@ -1,0 +1,50 @@
+import socket
+import random
+
+# Δημιουργία socket για τον server
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('localhost', 12345))
+server_socket.listen(1)  # Επιτρέπει μέχρι 1 σύνδεση κάθε φορά
+print("Ο server τρέχει και περιμένει συνδέσεις...")
+
+# Δημιουργία τυχαίου αριθμού για το παιχνίδι
+target_number = random.randint(1, 100)
+
+print(f"Ο τυχαίος αριθμός είναι {target_number} (για έλεγχο).")
+
+# Αναμονή για σύνδεση πελάτη
+client_socket, client_address = server_socket.accept()
+print(f"Συνδέθηκε ο πελάτης από {client_address}.")
+
+# Διαχείριση παιχνιδιού
+while True:
+    # Λήψη μηνύματος από τον πελάτη
+    message = client_socket.recv(1024).decode('utf-8')
+    if not message:
+        break
+
+    print(f"Μήνυμα από πελάτη: {message}")
+
+    # Έλεγχος αν ο πελάτης θέλει να κλείσει τη σύνδεση
+    if message == "*#0#*":
+        print("Ο πελάτης έκλεισε τη σύνδεση.")
+        client_socket.send("Αποσυνδέθηκες από τον server.".encode('utf-8'))
+        break
+
+    # Έλεγχος της εικασίας του πελάτη
+    try:
+        guess = int(message)
+        if guess < target_number:
+            client_socket.send("Ο αριθμός είναι μεγαλύτερος.".encode('utf-8'))
+        elif guess > target_number:
+            client_socket.send("Ο αριθμός είναι μικρότερος.".encode('utf-8'))
+        else:
+            client_socket.send("Σωστά! Βρήκες τον αριθμό.".encode('utf-8'))
+            break
+    except ValueError:
+        client_socket.send("Παρακαλώ εισάγετε έναν έγκυρο αριθμό.".encode('utf-8'))
+
+# Κλείσιμο sockets
+client_socket.close()
+server_socket.close()
+print("Ο server έκλεισε.")
